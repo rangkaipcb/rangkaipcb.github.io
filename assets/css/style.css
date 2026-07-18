@@ -1697,6 +1697,166 @@ a:hover, a:focus-visible {
   border-radius: 6px;
 }
 
+/* ===== Simulasi alur pemesanan (simulasi.html) =====
+   Prototype-only styles for the two-panel client/admin order flow demo.
+   Reuses .stepper / .card / .btn / .notice-box / .form-field tokens above. */
+.stepper-item[data-status="done"] .stepper-num {
+  background: #2f9e44;
+}
+
+.stepper-item[data-status="active"] {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent) inset, var(--shadow-card);
+}
+
+.stepper-item[data-status="active"] .stepper-num {
+  outline: 3px solid var(--color-tag-bg);
+}
+
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .sim-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sim-panel {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sim-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sim-panel-head svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.sim-panel-head h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.sim-panel-sub {
+  margin: -0.6rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.sim-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.sim-block:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.sim-block h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.sim-block select,
+.sim-block input[type="text"] {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  width: 100%;
+}
+
+.sim-block select:focus,
+.sim-block input[type="text"]:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.sim-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.sim-action-hint {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.sim-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--color-tag-bg);
+  color: var(--color-tag-text);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.sim-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.sim-history li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.sim-history li span.sim-history-label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.sim-reset-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+}
+
 /* ===== i18n =====
    Language text is swapped via JS (assets/js/main.js), which reads the
    data-lang-id / data-lang-en attributes on each element and writes the
