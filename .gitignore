@@ -1,0 +1,12 @@
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*~
+
+# Jangan pernah commit riwayat git lama / folder upload sementara
+../rangkaipcb-upload/
