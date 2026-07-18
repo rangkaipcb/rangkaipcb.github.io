@@ -753,8 +753,8 @@
           if (data && data.success) {
             showStatus(
               "success",
-              "Terima kasih! Spesifikasimu terkirim, kami balas ke emailmu. Cek juga folder spam.",
-              "Thank you! Your spec has been sent, we'll reply to your email. Please check your spam folder too."
+              "Terima kasih! Spesifikasimu terkirim. Akan kami balas ke emailmu dalam 1x24 jam. Cek juga folder spam.",
+              "Thank you! Your spec has been sent. We'll reply to your email within 24 hours. Please check your spam folder too."
             );
             form.reset();
           } else if (data && data.__status === 429) {
