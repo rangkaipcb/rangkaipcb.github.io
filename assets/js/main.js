@@ -367,6 +367,13 @@
     }
   }
 
+  function scrollToSpecResult() {
+    var panel = document.getElementById("spec-result");
+    if (panel && panel.classList.contains("visible")) {
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
   function initPartsRows() {
     var container = document.getElementById("parts-rows");
     if (!container) return;
@@ -375,6 +382,13 @@
     var addBtn = document.getElementById("parts-add-btn");
     if (addBtn) {
       addBtn.addEventListener("click", addPartsRow);
+    }
+    var doneBtn = document.getElementById("parts-done-btn");
+    if (doneBtn) {
+      doneBtn.addEventListener("click", function () {
+        renderSpecResult();
+        scrollToSpecResult();
+      });
     }
   }
 
@@ -435,7 +449,6 @@
     componentsEl.innerHTML = list.map(function (c) { return "<li>" + c + "</li>"; }).join("");
 
     panel.classList.add("visible");
-    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
     fillSpecSummaryIntoForm();
   }

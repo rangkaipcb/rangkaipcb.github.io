@@ -1139,6 +1139,19 @@ a:hover, a:focus-visible {
 }
 
 /* ===== Komponen khusus (multi-baris) ===== */
+.parts-done {
+  margin-top: 0.9rem;
+  margin-left: 0.6rem;
+}
+
+@media (max-width: 560px) {
+  .parts-done {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .parts-rows {
   display: flex;
   flex-direction: column;
