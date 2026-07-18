@@ -1,5 +1,5 @@
 /* =========================================================
-   RangkaiPCB — Jasa Desain PCB
+   RangkaiPCB, Jasa Desain PCB
    Shared vanilla JS: theme toggle, language toggle, mobile nav.
    No dependencies, no build step.
    ========================================================= */
@@ -55,6 +55,13 @@
     nodes.forEach(function (el) {
       var val = el.getAttribute(attr);
       if (val !== null) el.innerHTML = val;
+    });
+
+    var placeholderAttr = code === "en" ? "data-lang-placeholder-en" : "data-lang-placeholder-id";
+    var placeholderNodes = document.querySelectorAll("[data-lang-placeholder-id][data-lang-placeholder-en]");
+    placeholderNodes.forEach(function (el) {
+      var val = el.getAttribute(placeholderAttr);
+      if (val !== null) el.setAttribute("placeholder", val);
     });
 
     var buttons = document.querySelectorAll(".lang-toggle button");
@@ -139,7 +146,7 @@
   /* =========================================================
      Spec selector (Selektor Spesifikasi)
      Bilingual labels + typical component lists, no prices for
-     components — only the design service fee (Rp 100k / 200k).
+     components; only the design service fee (Rp 100k / 150k / 200k).
      ========================================================= */
 
   var SPEC_LABELS = {
@@ -151,20 +158,32 @@
       lainnya: { id: "Lainnya", en: "Other" }
     },
     mcu: {
-      esp32: { id: "Ya — ESP32", en: "Yes — ESP32" },
-      arduino: { id: "Ya — Arduino", en: "Yes — Arduino" },
-      stm32: { id: "Ya — STM32", en: "Yes — STM32" },
+      esp32: { id: "ESP32", en: "ESP32" },
+      arduino: { id: "Arduino", en: "Arduino" },
+      stm32: { id: "STM32", en: "STM32" },
       "belum-tahu-mcu": { id: "Belum tahu, dibantu", en: "Not sure yet, help me decide" },
       tidak: { id: "Tidak", en: "No" }
     },
     layer: {
-      "single-double": { id: "Single/Double Layer", en: "Single/Double Layer" },
+      single: { id: "Single Layer", en: "Single Layer" },
+      double: { id: "Double Layer", en: "Double Layer" },
       multilayer: { id: "Multilayer 4 Layer+", en: "Multilayer 4 Layer+" },
       "belum-tahu-layer": { id: "Belum tahu, dibantu tentukan", en: "Not sure yet, help me decide" }
     }
   };
 
-  /* Typical CORE components only (big/important parts) — no small
+  var PARTS_CATEGORY_LABELS = {
+    "Gate Driver": { id: "Gate Driver", en: "Gate Driver" },
+    "MOSFET / Transistor": { id: "MOSFET / Transistor", en: "MOSFET / Transistor" },
+    "Mikrokontroler": { id: "Mikrokontroler", en: "Microcontroller" },
+    "Sensor": { id: "Sensor", en: "Sensor" },
+    "Regulator / Power IC": { id: "Regulator / Power IC", en: "Regulator / Power IC" },
+    "Op-Amp / Analog": { id: "Op-Amp / Analog", en: "Op-Amp / Analog" },
+    "Konektor": { id: "Konektor", en: "Connector" },
+    "Lainnya": { id: "Lainnya", en: "Other" }
+  };
+
+  /* Typical CORE components only (big/important parts), no small
      parts (R/C/LED/etc.) and no prices, per project brief. */
   var SPEC_COMPONENTS = {
     motor: {
@@ -184,8 +203,8 @@
       en: ["MCU", "AFE / ADC", "Sensor", "Interface connector"]
     },
     lainnya: {
-      id: ["Ceritakan proyekmu di form &mdash; komponen inti kita bahas langsung."],
-      en: ["Tell us about your project in the form &mdash; we'll go over the core components together."]
+      id: ["Ceritakan proyekmu di form, komponen inti kita bahas langsung."],
+      en: ["Tell us about your project in the form, we'll go over the core components together."]
     }
   };
 
@@ -222,16 +241,25 @@
       setStepLocked("layer", false);
     }
     if (group === "layer") {
+      setStepLocked("parts", false);
       renderSpecResult();
     }
   }
 
   function priceForLayer(layer) {
-    if (layer === "single-double") {
+    if (layer === "single") {
       return {
         id: "Rp 100.000",
         idSmall: "harga jasa desain",
         en: "Rp 100,000",
+        enSmall: "design service price"
+      };
+    }
+    if (layer === "double") {
+      return {
+        id: "Rp 150.000",
+        idSmall: "harga jasa desain",
+        en: "Rp 150,000",
         enSmall: "design service price"
       };
     }
@@ -244,11 +272,127 @@
       };
     }
     return {
-      id: "Rp 100.000–200.000",
+      id: "Rp 100.000 - Rp 200.000",
       idSmall: "dipastikan setelah konsultasi",
-      en: "Rp 100,000–200,000",
+      en: "Rp 100,000 - Rp 200,000",
       enSmall: "confirmed after consultation"
     };
+  }
+
+  /* ---------- Komponen khusus (multi-row: kategori + part number) ---------- */
+  function collectParts() {
+    var rows = document.querySelectorAll("#parts-rows .parts-row");
+    var parts = [];
+    rows.forEach(function (row) {
+      var select = row.querySelector(".parts-category");
+      var input = row.querySelector(".parts-value");
+      if (!select || !input) return;
+      var value = input.value.trim();
+      if (!value) return;
+      parts.push({ category: select.value, value: value });
+    });
+    return parts;
+  }
+
+  function partsCategoryLabel(category, lang) {
+    var entry = PARTS_CATEGORY_LABELS[category];
+    if (!entry) return category;
+    return entry[lang] || category;
+  }
+
+  function partsSummaryLines(lang) {
+    var parts = collectParts();
+    if (!parts.length) return [];
+    return parts.map(function (p) {
+      return partsCategoryLabel(p.category, lang) + " = " + p.value;
+    });
+  }
+
+  function addPartsRow() {
+    var container = document.getElementById("parts-rows");
+    if (!container) return;
+    var template = container.querySelector(".parts-row");
+    if (!template) return;
+    var clone = template.cloneNode(true);
+    var select = clone.querySelector(".parts-category");
+    var input = clone.querySelector(".parts-value");
+    if (select) select.selectedIndex = 0;
+    if (input) input.value = "";
+    container.appendChild(clone);
+    bindPartsRow(clone);
+    updatePartsRemoveState();
+  }
+
+  function removePartsRow(row) {
+    var container = document.getElementById("parts-rows");
+    if (!container) return;
+    var rows = container.querySelectorAll(".parts-row");
+    if (rows.length <= 1) return;
+    row.remove();
+    updatePartsRemoveState();
+    renderSpecResult();
+  }
+
+  function updatePartsRemoveState() {
+    var rows = document.querySelectorAll("#parts-rows .parts-row");
+    rows.forEach(function (row) {
+      var btn = row.querySelector(".parts-remove");
+      if (!btn) return;
+      if (rows.length <= 1) {
+        btn.setAttribute("disabled", "disabled");
+      } else {
+        btn.removeAttribute("disabled");
+      }
+    });
+  }
+
+  function bindPartsRow(row) {
+    var input = row.querySelector(".parts-value");
+    var removeBtn = row.querySelector(".parts-remove");
+    if (input) {
+      input.addEventListener("input", function () {
+        renderSpecResult();
+      });
+    }
+    var select = row.querySelector(".parts-category");
+    if (select) {
+      select.addEventListener("change", function () {
+        renderSpecResult();
+      });
+    }
+    if (removeBtn) {
+      removeBtn.addEventListener("click", function () {
+        removePartsRow(row);
+      });
+    }
+  }
+
+  function initPartsRows() {
+    var container = document.getElementById("parts-rows");
+    if (!container) return;
+    container.querySelectorAll(".parts-row").forEach(bindPartsRow);
+    updatePartsRemoveState();
+    var addBtn = document.getElementById("parts-add-btn");
+    if (addBtn) {
+      addBtn.addEventListener("click", addPartsRow);
+    }
+  }
+
+  function resetPartsRows() {
+    var container = document.getElementById("parts-rows");
+    if (!container) return;
+    var rows = container.querySelectorAll(".parts-row");
+    rows.forEach(function (row, idx) {
+      if (idx === 0) {
+        var select = row.querySelector(".parts-category");
+        var input = row.querySelector(".parts-value");
+        if (select) select.selectedIndex = 0;
+        if (input) input.value = "";
+      } else {
+        row.remove();
+      }
+    });
+    updatePartsRemoveState();
   }
 
   function renderSpecResult() {
@@ -260,16 +404,22 @@
 
     var lang = currentLang();
     var mcuLabel = specState.mcu ? specLabel("mcu", specState.mcu) : (lang === "en" ? "Not specified" : "Belum dipilih");
+    var partsLines = partsSummaryLines(lang);
+    var partsLabel = partsLines.length
+      ? partsLines.join("; ")
+      : (lang === "en" ? "None specified" : "Tidak ada");
 
     var summaryItemsId = [
       { label: "Jenis Proyek", value: specLabel("project", specState.project) },
       { label: "Mikrokontroler", value: mcuLabel },
-      { label: "Jumlah Layer", value: specLabel("layer", specState.layer) }
+      { label: "Jumlah Layer", value: specLabel("layer", specState.layer) },
+      { label: "Komponen Khusus", value: partsLabel }
     ];
     var summaryItemsEn = [
       { label: "Project Type", value: specLabel("project", specState.project) },
       { label: "Microcontroller", value: mcuLabel },
-      { label: "Layer Count", value: specLabel("layer", specState.layer) }
+      { label: "Layer Count", value: specLabel("layer", specState.layer) },
+      { label: "Specific Components", value: partsLabel }
     ];
     var items = lang === "en" ? summaryItemsEn : summaryItemsId;
     summaryEl.innerHTML = items.map(function (it) {
@@ -297,6 +447,7 @@
     var price = priceForLayer(specState.layer);
     var priceText = lang === "en" ? price.en : price.id;
     var mcuLabel = specState.mcu ? specLabel("mcu", specState.mcu) : (lang === "en" ? "not specified" : "belum dipilih");
+    var partsLines = partsSummaryLines(lang);
 
     var lines;
     if (lang === "en") {
@@ -304,14 +455,16 @@
         "Project type: " + specLabel("project", specState.project),
         "Microcontroller: " + mcuLabel,
         "Layers: " + specLabel("layer", specState.layer),
-        "Design service price: " + priceText
+        "Design service price: " + priceText,
+        "Specific components: " + (partsLines.length ? partsLines.join("; ") : "none specified")
       ];
     } else {
       lines = [
         "Jenis proyek: " + specLabel("project", specState.project),
         "Mikrokontroler: " + mcuLabel,
         "Jumlah layer: " + specLabel("layer", specState.layer),
-        "Harga jasa desain: " + priceText
+        "Harga jasa desain: " + priceText,
+        "Komponen khusus: " + (partsLines.length ? partsLines.join("; ") : "tidak ada")
       ];
     }
     textarea.value = lines.join("\n");
@@ -324,6 +477,8 @@
     });
     setStepLocked("mcu", true);
     setStepLocked("layer", true);
+    setStepLocked("parts", true);
+    resetPartsRows();
     var panel = document.getElementById("spec-result");
     if (panel) panel.classList.remove("visible");
     var textarea = document.getElementById("cf-spec");
@@ -345,6 +500,8 @@
       });
     });
 
+    initPartsRows();
+
     var resetBtn = document.getElementById("selector-reset-btn");
     if (resetBtn) {
       resetBtn.addEventListener("click", resetSelector);
@@ -352,7 +509,7 @@
   }
 
   /* =========================================================
-     Contact form (Web3Forms) — async submit with graceful
+     Contact form (Web3Forms), async submit with graceful
      fallback to normal form POST if fetch/JS fails.
      ========================================================= */
   function initContactForm() {

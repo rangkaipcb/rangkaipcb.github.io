@@ -1132,6 +1132,102 @@ a:hover, a:focus-visible {
   pointer-events: none;
 }
 
+.selector-step-sub {
+  margin: -0.4rem 0 1rem;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+/* ===== Komponen khusus (multi-baris) ===== */
+.parts-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+
+.parts-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1.4fr) auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+@media (max-width: 560px) {
+  .parts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.parts-category,
+.parts-value {
+  font-family: inherit;
+  font-size: 0.94rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  width: 100%;
+}
+
+.parts-category:focus,
+.parts-value:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.parts-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.parts-remove svg {
+  width: 16px;
+  height: 16px;
+}
+
+.parts-remove:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+.parts-remove:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.parts-remove:disabled:hover {
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.parts-add {
+  background: none;
+  border: 1px dashed var(--color-border);
+  color: var(--color-accent);
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.parts-add:hover {
+  border-color: var(--color-accent);
+  background: var(--color-tag-bg);
+}
+
 /* ===== Spec result panel ===== */
 .spec-result {
   background: var(--color-bg-raised);
@@ -1417,6 +1513,41 @@ a:hover, a:focus-visible {
   .stepper {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* ===== QR pembayaran simulasi (bayar.html) ===== */
+.qr-demo-card {
+  max-width: 320px;
+  margin: 0 auto;
+  background: var(--color-bg-raised);
+  border: 2px dashed var(--color-warn-border);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+.qr-demo-watermark {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-warn-text);
+  background: var(--color-warn-bg);
+  border: 1px solid var(--color-warn-border);
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  line-height: 1.4;
+}
+
+.qr-demo-image {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
 }
 
 /* ===== i18n =====

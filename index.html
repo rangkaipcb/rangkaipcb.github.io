@@ -185,13 +185,13 @@
           </div>
           <div class="selector-options" data-group="mcu">
             <button type="button" class="selector-option" data-value="esp32" aria-pressed="false">
-              <span class="opt-title" data-lang-id="Ya: ESP32" data-lang-en="Yes: ESP32">Ya: ESP32</span>
+              <span class="opt-title" data-lang-id="ESP32" data-lang-en="ESP32">ESP32</span>
             </button>
             <button type="button" class="selector-option" data-value="arduino" aria-pressed="false">
-              <span class="opt-title" data-lang-id="Ya: Arduino" data-lang-en="Yes: Arduino">Ya: Arduino</span>
+              <span class="opt-title" data-lang-id="Arduino" data-lang-en="Arduino">Arduino</span>
             </button>
             <button type="button" class="selector-option" data-value="stm32" aria-pressed="false">
-              <span class="opt-title" data-lang-id="Ya: STM32" data-lang-en="Yes: STM32">Ya: STM32</span>
+              <span class="opt-title" data-lang-id="STM32" data-lang-en="STM32">STM32</span>
             </button>
             <button type="button" class="selector-option" data-value="belum-tahu-mcu" aria-pressed="false">
               <span class="opt-title" data-lang-id="Belum tahu, dibantu" data-lang-en="Not sure yet, help me decide">Belum tahu, dibantu</span>
@@ -209,9 +209,13 @@
             <h3 data-lang-id="Jumlah Layer PCB" data-lang-en="Number of PCB Layers">Jumlah Layer PCB</h3>
           </div>
           <div class="selector-options" data-group="layer">
-            <button type="button" class="selector-option" data-value="single-double" aria-pressed="false">
-              <span class="opt-title" data-lang-id="Single/Double Layer" data-lang-en="Single/Double Layer">Single/Double Layer</span>
+            <button type="button" class="selector-option" data-value="single" aria-pressed="false">
+              <span class="opt-title" data-lang-id="Single Layer" data-lang-en="Single Layer">Single Layer</span>
               <span class="opt-sub">Rp 100.000</span>
+            </button>
+            <button type="button" class="selector-option" data-value="double" aria-pressed="false">
+              <span class="opt-title" data-lang-id="Double Layer" data-lang-en="Double Layer">Double Layer</span>
+              <span class="opt-sub">Rp 150.000</span>
             </button>
             <button type="button" class="selector-option" data-value="multilayer" aria-pressed="false">
               <span class="opt-title" data-lang-id="Multilayer 4 Layer+" data-lang-en="Multilayer 4 Layer+">Multilayer 4 Layer+</span>
@@ -221,6 +225,34 @@
               <span class="opt-title" data-lang-id="Belum tahu, dibantu tentukan" data-lang-en="Not sure yet, help me decide">Belum tahu, dibantu tentukan</span>
             </button>
           </div>
+        </div>
+
+        <!-- Step 4: Komponen Khusus (opsional) -->
+        <div class="selector-step" data-step="parts" data-locked="true">
+          <div class="selector-step-head">
+            <span class="selector-step-num">4</span>
+            <h3 data-lang-id="Komponen Khusus (opsional)" data-lang-en="Specific Components (optional)">Komponen Khusus (opsional)</h3>
+          </div>
+          <p class="selector-step-sub" data-lang-id="Ada part tertentu yang mau dipakai? Tambahkan di sini, boleh dikosongkan kalau belum tahu." data-lang-en="Have a specific part in mind? Add it here, feel free to leave this blank if you're not sure yet.">Ada part tertentu yang mau dipakai? Tambahkan di sini, boleh dikosongkan kalau belum tahu.</p>
+          <div class="parts-rows" id="parts-rows">
+            <div class="parts-row" data-part-row>
+              <select class="parts-category" aria-label="Kategori komponen / Component category">
+                <option value="Gate Driver" data-lang-id="Gate Driver" data-lang-en="Gate Driver">Gate Driver</option>
+                <option value="MOSFET / Transistor" data-lang-id="MOSFET / Transistor" data-lang-en="MOSFET / Transistor">MOSFET / Transistor</option>
+                <option value="Mikrokontroler" data-lang-id="Mikrokontroler" data-lang-en="Microcontroller">Mikrokontroler</option>
+                <option value="Sensor" data-lang-id="Sensor" data-lang-en="Sensor">Sensor</option>
+                <option value="Regulator / Power IC" data-lang-id="Regulator / Power IC" data-lang-en="Regulator / Power IC">Regulator / Power IC</option>
+                <option value="Op-Amp / Analog" data-lang-id="Op-Amp / Analog" data-lang-en="Op-Amp / Analog">Op-Amp / Analog</option>
+                <option value="Konektor" data-lang-id="Konektor" data-lang-en="Connector">Konektor</option>
+                <option value="Lainnya" data-lang-id="Lainnya" data-lang-en="Other">Lainnya</option>
+              </select>
+              <input type="text" class="parts-value" data-lang-placeholder-id="Contoh: IR2110" data-lang-placeholder-en="Example: IR2110" placeholder="Contoh: IR2110">
+              <button type="button" class="parts-remove" aria-label="Hapus baris komponen ini / Remove this component row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="button" class="parts-add" id="parts-add-btn" data-lang-id="+ Tambah komponen" data-lang-en="+ Add component">+ Tambah komponen</button>
         </div>
 
         <!-- Reset -->
@@ -367,17 +399,33 @@
     <div class="container">
       <div class="section-head">
         <h2 data-lang-id="Harga" data-lang-en="Pricing">Harga</h2>
-        <p data-lang-id="Dua paket sederhana, harga final tergantung kompleksitas rangkaian. Konsultasi awal selalu gratis." data-lang-en="Two simple packages, final price depends on circuit complexity. Initial consultation is always free.">Dua paket sederhana, harga final tergantung kompleksitas rangkaian. Konsultasi awal selalu gratis.</p>
+        <p data-lang-id="Tiga tingkat sederhana sesuai jumlah layer, harga final tergantung kompleksitas rangkaian. Konsultasi awal selalu gratis." data-lang-en="Three simple tiers based on layer count, final price depends on circuit complexity. Initial consultation is always free.">Tiga tingkat sederhana sesuai jumlah layer, harga final tergantung kompleksitas rangkaian. Konsultasi awal selalu gratis.</p>
       </div>
       <div class="pkg-grid">
         <div class="pkg-card">
-          <h3 class="pkg-title" data-lang-id="PCB Single/Double Layer" data-lang-en="Single/Double Layer PCB">PCB Single/Double Layer</h3>
-          <p class="pkg-sub" data-lang-id="Cocok untuk kebanyakan proyek sekolah &amp; mahasiswa" data-lang-en="Suitable for most school &amp; student projects">Cocok untuk kebanyakan proyek sekolah &amp; mahasiswa</p>
+          <h3 class="pkg-title" data-lang-id="PCB Single Layer" data-lang-en="Single Layer PCB">PCB Single Layer</h3>
+          <p class="pkg-sub" data-lang-id="Cocok untuk rangkaian sederhana &amp; proyek sekolah" data-lang-en="Suitable for simple circuits &amp; school projects">Cocok untuk rangkaian sederhana &amp; proyek sekolah</p>
           <div class="pkg-price">Rp 100.000
             <small data-lang-id="mulai dari &middot; bayar penuh di muka" data-lang-en="starting from &middot; full payment upfront">mulai dari &middot; bayar penuh di muka</small>
           </div>
           <ul class="pkg-list">
-            <li data-lang-id="Skematik + layout 1&ndash;2 layer" data-lang-en="Schematic + 1&ndash;2 layer layout">Skematik + layout 1&ndash;2 layer</li>
+            <li data-lang-id="Skematik + layout 1 layer" data-lang-en="Schematic + 1-layer layout">Skematik + layout 1 layer</li>
+            <li data-lang-id="Gerber &amp; drill file siap fabrikasi" data-lang-en="Gerber &amp; drill files ready to fabricate">Gerber &amp; drill file siap fabrikasi</li>
+            <li data-lang-id="BOM lengkap" data-lang-en="Complete BOM">BOM lengkap</li>
+          </ul>
+          <a class="btn btn-primary" href="#selektor">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span data-lang-id="Pilih Paket Ini" data-lang-en="Choose This Package">Pilih Paket Ini</span>
+          </a>
+        </div>
+        <div class="pkg-card">
+          <h3 class="pkg-title" data-lang-id="PCB Double Layer" data-lang-en="Double Layer PCB">PCB Double Layer</h3>
+          <p class="pkg-sub" data-lang-id="Cocok untuk kebanyakan proyek mahasiswa &amp; proyek pribadi" data-lang-en="Suitable for most student &amp; personal projects">Cocok untuk kebanyakan proyek mahasiswa &amp; proyek pribadi</p>
+          <div class="pkg-price">Rp 150.000
+            <small data-lang-id="mulai dari &middot; bayar penuh di muka" data-lang-en="starting from &middot; full payment upfront">mulai dari &middot; bayar penuh di muka</small>
+          </div>
+          <ul class="pkg-list">
+            <li data-lang-id="Skematik + layout 2 layer" data-lang-en="Schematic + 2-layer layout">Skematik + layout 2 layer</li>
             <li data-lang-id="Gerber &amp; drill file siap fabrikasi" data-lang-en="Gerber &amp; drill files ready to fabricate">Gerber &amp; drill file siap fabrikasi</li>
             <li data-lang-id="BOM lengkap" data-lang-en="Complete BOM">BOM lengkap</li>
           </ul>
@@ -389,7 +437,7 @@
         <div class="pkg-card featured">
           <span class="pkg-badge" data-lang-id="Boleh DP" data-lang-en="Down Payment OK">Boleh DP</span>
           <h3 class="pkg-title" data-lang-id="PCB Multilayer (4 Layer+)" data-lang-en="Multilayer PCB (4 Layer+)">PCB Multilayer (4 Layer+)</h3>
-          <p class="pkg-sub" data-lang-id="Untuk rangkaian yang lebih kompleks &amp; padat" data-lang-en="For more complex &amp; dense circuits">Untuk rangkaian yang lebih kompleks &amp; padat</p>
+          <p class="pkg-sub" data-lang-id="Untuk rangkaian yang lebih kompleks &amp; padat, di atas double layer" data-lang-en="For more complex &amp; dense circuits, above double layer">Untuk rangkaian yang lebih kompleks &amp; padat, di atas double layer</p>
           <div class="pkg-price">Rp 200.000
             <small data-lang-id="mulai dari &middot; DP 50%, lunas saat serah terima" data-lang-en="starting from &middot; 50% down payment, rest on delivery">mulai dari &middot; DP 50%, lunas saat serah terima</small>
           </div>
@@ -405,10 +453,14 @@
         </div>
       </div>
       <div class="info-box mt-lg">
+        <strong data-lang-id="Catatan kompleksitas" data-lang-en="Complexity note">Catatan kompleksitas</strong>
+        <span data-lang-id="Harga di atas untuk board dengan kompleksitas standar. Board dengan tuntutan khusus, misalnya sinyal high-frequency, mixed-signal sensitif, kepadatan tinggi, atau arus besar, bisa lebih tinggi meski jumlah layer sama. Harga final dipastikan setelah kami lihat kebutuhanmu." data-lang-en="The prices above are for boards with standard complexity. Boards with special demands, such as high-frequency signals, sensitive mixed-signal design, high density, or high current, may cost more even with the same layer count. The final price is confirmed after we review your requirements.">Harga di atas untuk board dengan kompleksitas standar. Board dengan tuntutan khusus, misalnya sinyal high-frequency, mixed-signal sensitif, kepadatan tinggi, atau arus besar, bisa lebih tinggi meski jumlah layer sama. Harga final dipastikan setelah kami lihat kebutuhanmu.</span>
+      </div>
+      <div class="info-box mt-lg">
         <strong data-lang-id="Estimasi waktu pengerjaan" data-lang-en="Estimated turnaround time">Estimasi waktu pengerjaan</strong>
         <span data-lang-id="Kurang lebih 3 hari untuk board single/double layer jenis IoT, Power Supply, atau Sensor/Data Acquisition. Kurang lebih 1 minggu untuk jenis proyek lain (termasuk Motor Controller DC/BLDC) dan semua board multilayer. Estimasi ini dihitung sejak kebutuhan lengkap disepakati dan DP masuk, bukan sejak chat pertama." data-lang-en="Around 3 days for single/double layer IoT, Power Supply, or Sensor/Data Acquisition boards. Around 1 week for other project types (including DC/BLDC Motor Controller) and all multilayer boards. This estimate is counted from when the full requirements are agreed and the down payment is in, not from the first chat.">Kurang lebih 3 hari untuk board single/double layer jenis IoT, Power Supply, atau Sensor/Data Acquisition. Kurang lebih 1 minggu untuk jenis proyek lain (termasuk Motor Controller DC/BLDC) dan semua board multilayer. Estimasi ini dihitung sejak kebutuhan lengkap disepakati dan DP masuk, bukan sejak chat pertama.</span>
       </div>
-      <p class="pkg-note mt-lg" data-lang-id="Pembayaran transfer bank manual. Nomor rekening dikirim lewat kontak admin setelah kita sepakat harga &amp; scope, tidak ditampilkan di website ini." data-lang-en="Payment via manual bank transfer. Account number is sent through the admin contact after we agree on price &amp; scope, not shown on this website.">Pembayaran transfer bank manual. Nomor rekening dikirim lewat kontak admin setelah kita sepakat harga &amp; scope, tidak ditampilkan di website ini.</p>
+      <p class="pkg-note mt-lg" data-lang-id="Pembayaran transfer bank atau e-wallet. Untuk paket Single &amp; Double Layer, nominalnya kecil jadi boleh lunas di muka. Untuk paket Multilayer, boleh DP 50% dulu. Detail pembayaran dikirim lewat kontak admin setelah kita sepakat harga &amp; scope, tidak ditampilkan di website ini." data-lang-en="Payment via bank transfer or e-wallet. For the Single &amp; Double Layer packages, the amount is small so full payment upfront is fine. For the Multilayer package, a 50% down payment is available. Payment details are sent through the admin contact after we agree on price &amp; scope, not shown on this website.">Pembayaran transfer bank atau e-wallet. Untuk paket Single &amp; Double Layer, nominalnya kecil jadi boleh lunas di muka. Untuk paket Multilayer, boleh DP 50% dulu. Detail pembayaran dikirim lewat kontak admin setelah kita sepakat harga &amp; scope, tidak ditampilkan di website ini.</p>
     </div>
   </section>
 
@@ -433,7 +485,7 @@
         <div class="stepper-item">
           <span class="stepper-num">3</span>
           <h3 data-lang-id="Down Payment" data-lang-en="Down Payment">Down Payment</h3>
-          <p data-lang-id="Pengerjaan dimulai setelah DP. Paket Rp 100rb: lunas di depan. Paket Rp 200rb: DP 50%." data-lang-en="Work begins after down payment. Rp 100k package: full payment upfront. Rp 200k package: 50% down payment.">Pengerjaan dimulai setelah DP. Paket Rp 100rb: lunas di depan. Paket Rp 200rb: DP 50%.</p>
+          <p data-lang-id="Pengerjaan dimulai setelah DP. Paket Single &amp; Double Layer: lunas di depan. Paket Multilayer: DP 50%." data-lang-en="Work begins after down payment. Single &amp; Double Layer package: full payment upfront. Multilayer package: 50% down payment.">Pengerjaan dimulai setelah DP. Paket Single &amp; Double Layer: lunas di depan. Paket Multilayer: DP 50%.</p>
         </div>
         <div class="stepper-item">
           <span class="stepper-num">4</span>
@@ -453,7 +505,7 @@
         <div class="stepper-item">
           <span class="stepper-num">7</span>
           <h3 data-lang-id="Pelunasan" data-lang-en="Final Payment">Pelunasan</h3>
-          <p data-lang-id="Untuk paket Rp 200rb, sisa pembayaran dilunasi setelah desain disetujui." data-lang-en="For the Rp 200k package, the remaining balance is settled once the design is approved.">Untuk paket Rp 200rb, sisa pembayaran dilunasi setelah desain disetujui.</p>
+          <p data-lang-id="Untuk paket Multilayer, sisa pembayaran dilunasi setelah desain disetujui." data-lang-en="For the Multilayer package, the remaining balance is settled once the design is approved.">Untuk paket Multilayer, sisa pembayaran dilunasi setelah desain disetujui.</p>
         </div>
         <div class="stepper-item">
           <span class="stepper-num">8</span>
@@ -506,7 +558,7 @@
             <span data-lang-id="Aman nggak bayar di depan?" data-lang-en="Is it safe to pay upfront?">Aman nggak bayar di depan?</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <p class="faq-answer" data-lang-id="Untuk paket Rp 100.000, memang dibayar penuh di muka karena nominalnya kecil. Untuk paket Rp 200.000, kamu bisa DP 50% dulu dan lunasi saat file sudah selesai &amp; diterima. Kita bahas dulu lewat kontak admin sebelum mulai, jadi kamu tahu persis apa yang dikerjakan sebelum transfer." data-lang-en="For the Rp 100,000 package, payment is upfront in full since the amount is small. For the Rp 200,000 package, you can pay a 50% down payment first and settle the rest once the files are done and delivered. We'll go over everything through the admin contact before starting, so you know exactly what's being done before you pay.">Untuk paket Rp 100.000, memang dibayar penuh di muka karena nominalnya kecil. Untuk paket Rp 200.000, kamu bisa DP 50% dulu dan lunasi saat file sudah selesai &amp; diterima. Kita bahas dulu lewat kontak admin sebelum mulai, jadi kamu tahu persis apa yang dikerjakan sebelum transfer.</p>
+          <p class="faq-answer" data-lang-id="Untuk paket Single &amp; Double Layer (Rp 100.000 dan Rp 150.000), memang dibayar penuh di muka karena nominalnya kecil. Untuk paket Multilayer (Rp 200.000), kamu bisa DP 50% dulu dan lunasi saat file sudah selesai &amp; diterima. Kita bahas dulu lewat kontak admin sebelum mulai, jadi kamu tahu persis apa yang dikerjakan sebelum transfer." data-lang-en="For the Single &amp; Double Layer packages (Rp 100,000 and Rp 150,000), payment is upfront in full since the amount is small. For the Multilayer package (Rp 200,000), you can pay a 50% down payment first and settle the rest once the files are done and delivered. We'll go over everything through the admin contact before starting, so you know exactly what's being done before you pay.">Untuk paket Single &amp; Double Layer (Rp 100.000 dan Rp 150.000), memang dibayar penuh di muka karena nominalnya kecil. Untuk paket Multilayer (Rp 200.000), kamu bisa DP 50% dulu dan lunasi saat file sudah selesai &amp; diterima. Kita bahas dulu lewat kontak admin sebelum mulai, jadi kamu tahu persis apa yang dikerjakan sebelum transfer.</p>
         </div>
         <div class="faq-item" data-open="false">
           <button class="faq-question" aria-expanded="false">
