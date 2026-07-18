@@ -199,6 +199,13 @@
 
   var FAB_STANDARD_TEXT = { id: "standar pabrikan", en: "manufacturer standard" };
 
+  /* Angka preset per field (mm), dari kapabilitas resmi pabrik.
+     Mengisi field custom saat target JLCPCB/PCBWay dipilih. */
+  var FAB_PRESETS = {
+    jlcpcb: { trace: 0.1, spacing: 0.1, viaHole: 0.15, hole: 0.15, thickness: 1.6 },
+    pcbway: { trace: 0.1, spacing: 0.1, viaHole: 0.15, hole: 0.15, thickness: 1.6 }
+  };
+
   /* Typical CORE components only (big/important parts), no small
      parts (R/C/LED/etc.) and no prices, per project brief. */
   var SPEC_COMPONENTS = {
@@ -253,24 +260,23 @@
       b.setAttribute("aria-pressed", "false");
     });
     btn.setAttribute("aria-pressed", "true");
-    specState[group] = btn.getAttribute("data-value");
 
     if (group === "project") {
+      specState.project = btn.getAttribute("data-value");
       setStepLocked("mcu", false);
     }
     if (group === "mcu") {
+      specState.mcu = btn.getAttribute("data-value");
       setStepLocked("layer", false);
     }
     if (group === "layer") {
+      specState.layer = btn.getAttribute("data-value");
       setStepLocked("fab", false);
       renderSpecResult();
     }
     if (group === "fab") {
       specState.fab.target = btn.getAttribute("data-value");
       renderFabTarget();
-      if (specState.fab.target === "custom") {
-        collectFabCustomValues();
-      }
       setStepLocked("parts", false);
       renderSpecResult();
     }
@@ -286,7 +292,19 @@
     var target = specState.fab.target;
     infoJlc.hidden = target !== "jlcpcb";
     infoPcbway.hidden = target !== "pcbway";
-    customFields.hidden = target !== "custom";
+
+    // Field parameter selalu tampil begitu ada target dipilih.
+    customFields.hidden = !target;
+
+    // JLCPCB/PCBWay mengisi field dengan angka preset (bisa diedit klien).
+    // Custom mengisi 0 (arti: ikuti standar pabrikan sampai klien ubah).
+    var preset = FAB_PRESETS[target] || null;
+    document.querySelectorAll("#fab-custom-fields .fab-input").forEach(function (input) {
+      var key = input.getAttribute("data-fab-key");
+      if (!key) return;
+      input.value = preset ? preset[key] : 0;
+    });
+    collectFabCustomValues();
   }
 
   function collectFabCustomValues() {
@@ -309,17 +327,13 @@
   function fabSummaryText(lang) {
     var target = specState.fab.target;
     if (!target) return lang === "en" ? "Not specified" : "Belum dipilih";
-    if (target === "jlcpcb" || target === "pcbway") {
-      return FAB_LABELS[target][lang];
-    }
-    // custom
     var parts = ["trace", "spacing", "viaHole", "hole", "thickness"].map(function (key) {
       var fieldLabel = FAB_FIELD_LABELS[key][lang];
       var value = formatFabValue(specState.fab[key], lang);
       return fieldLabel + " " + value;
     });
-    var prefix = lang === "en" ? "Custom: " : "Custom: ";
-    return prefix + parts.join(", ");
+    var prefix = FAB_LABELS[target][lang] + " (";
+    return prefix + parts.join(", ") + ")";
   }
 
   function initFabConstraint() {
