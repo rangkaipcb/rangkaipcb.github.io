@@ -227,10 +227,83 @@
           </div>
         </div>
 
-        <!-- Step 4: Komponen Khusus (opsional) -->
-        <div class="selector-step" data-step="parts" data-locked="true">
+        <!-- Step 4: Batasan Fabrikasi (Constraint) -->
+        <div class="selector-step" data-step="fab" data-locked="true">
           <div class="selector-step-head">
             <span class="selector-step-num">4</span>
+            <h3 data-lang-id="Batasan Fabrikasi" data-lang-en="Fabrication Constraints">Batasan Fabrikasi</h3>
+          </div>
+          <p class="selector-step-sub" data-lang-id="Pilih standar pabrik yang jadi acuan desain, atau isi batasan sendiri kalau kamu sudah punya target spesifik." data-lang-en="Pick the fab house standard to design against, or fill in your own constraints if you already have specific targets.">Pilih standar pabrik yang jadi acuan desain, atau isi batasan sendiri kalau kamu sudah punya target spesifik.</p>
+          <div class="selector-options" data-group="fab">
+            <button type="button" class="selector-option" data-value="jlcpcb" aria-pressed="false">
+              <span class="opt-title" data-lang-id="Ikuti standar JLCPCB" data-lang-en="Follow JLCPCB standard">Ikuti standar JLCPCB</span>
+              <span class="opt-sub" data-lang-id="Standar umum yang dipakai banyak pabrik" data-lang-en="Common standard used by many fab houses">Standar umum yang dipakai banyak pabrik</span>
+            </button>
+            <button type="button" class="selector-option" data-value="pcbway" aria-pressed="false">
+              <span class="opt-title" data-lang-id="Ikuti standar PCBWay" data-lang-en="Follow PCBWay standard">Ikuti standar PCBWay</span>
+              <span class="opt-sub" data-lang-id="Standar umum yang dipakai banyak pabrik" data-lang-en="Common standard used by many fab houses">Standar umum yang dipakai banyak pabrik</span>
+            </button>
+            <button type="button" class="selector-option" data-value="custom" aria-pressed="false">
+              <span class="opt-title" data-lang-id="Isi sendiri (custom)" data-lang-en="Fill in manually (custom)">Isi sendiri (custom)</span>
+              <span class="opt-sub" data-lang-id="Kamu tentukan sendiri batasannya" data-lang-en="You define the constraints yourself">Kamu tentukan sendiri batasannya</span>
+            </button>
+          </div>
+
+          <div class="fab-info-box" id="fab-info-jlcpcb" hidden>
+            <strong data-lang-id="Ringkasan standar JLCPCB (FR4)" data-lang-en="JLCPCB standard summary (FR4)">Ringkasan standar JLCPCB (FR4)</strong>
+            <ul>
+              <li data-lang-id="Min lebar trace / spacing (2-layer, 1oz): 0,10 mm / 0,10 mm (4 mil)" data-lang-en="Min trace width / spacing (2-layer, 1oz): 0.10 mm / 0.10 mm (4 mil)">Min lebar trace / spacing (2-layer, 1oz): 0,10 mm / 0,10 mm (4 mil)</li>
+              <li data-lang-id="Min lebar trace / spacing (4-layer, 1oz): 0,09 mm (3,5 mil)" data-lang-en="Min trace width / spacing (4-layer, 1oz): 0.09 mm (3.5 mil)">Min lebar trace / spacing (4-layer, 1oz): 0,09 mm (3,5 mil)</li>
+              <li data-lang-id="Min via hole (drill): 0,15 mm" data-lang-en="Min via hole (drill): 0.15 mm">Min via hole (drill): 0,15 mm</li>
+              <li data-lang-id="Min diameter via: 0,25 mm" data-lang-en="Min via diameter: 0.25 mm">Min diameter via: 0,25 mm</li>
+              <li data-lang-id="Min annular ring: 0,20 mm" data-lang-en="Min annular ring: 0.20 mm">Min annular ring: 0,20 mm</li>
+              <li data-lang-id="Min drilled hole: 0,15 mm" data-lang-en="Min drilled hole: 0.15 mm">Min drilled hole: 0,15 mm</li>
+              <li data-lang-id="Ketebalan board standar: 0,8 / 1,0 / 1,2 / 1,6 mm" data-lang-en="Standard board thickness: 0.8 / 1.0 / 1.2 / 1.6 mm">Ketebalan board standar: 0,8 / 1,0 / 1,2 / 1,6 mm</li>
+            </ul>
+          </div>
+
+          <div class="fab-info-box" id="fab-info-pcbway" hidden>
+            <strong data-lang-id="Ringkasan standar PCBWay (FR4)" data-lang-en="PCBWay standard summary (FR4)">Ringkasan standar PCBWay (FR4)</strong>
+            <ul>
+              <li data-lang-id="Min lebar trace / spacing: 0,10 mm / 0,10 mm (4 mil)" data-lang-en="Min trace width / spacing: 0.10 mm / 0.10 mm (4 mil)">Min lebar trace / spacing: 0,10 mm / 0,10 mm (4 mil)</li>
+              <li data-lang-id="Min via hole (drill): 0,15 mm" data-lang-en="Min via hole (drill): 0.15 mm">Min via hole (drill): 0,15 mm</li>
+              <li data-lang-id="Min annular ring: 0,15 mm (6 mil)" data-lang-en="Min annular ring: 0.15 mm (6 mil)">Min annular ring: 0,15 mm (6 mil)</li>
+              <li data-lang-id="Min drilled hole: 0,15 mm (di bawah 0,2 mm kena biaya ekstra)" data-lang-en="Min drilled hole: 0.15 mm (below 0.2 mm incurs extra cost)">Min drilled hole: 0,15 mm (di bawah 0,2 mm kena biaya ekstra)</li>
+              <li data-lang-id="Ketebalan board: banyak opsi 0,6&ndash;1,6 mm umum" data-lang-en="Board thickness: many common options from 0.6&ndash;1.6 mm">Ketebalan board: banyak opsi 0,6&ndash;1,6 mm umum</li>
+            </ul>
+          </div>
+
+          <div class="fab-custom-fields" id="fab-custom-fields" hidden>
+            <p class="selector-step-sub" data-lang-id="Isi 0 jika ingin mengikuti standar pabrikan untuk parameter itu. Isi angka (mm) jika kamu butuh batasan lebih spesifik." data-lang-en="Enter 0 to follow the manufacturer default for that parameter. Enter a value (mm) if you need a more specific constraint.">Isi 0 jika ingin mengikuti standar pabrikan untuk parameter itu. Isi angka (mm) jika kamu butuh batasan lebih spesifik.</p>
+            <div class="fab-field">
+              <label for="fab-trace" data-lang-id="Min lebar trace (mm)" data-lang-en="Min trace width (mm)">Min lebar trace (mm)</label>
+              <input type="number" id="fab-trace" class="fab-input" data-fab-key="trace" min="0" step="0.01" value="0" inputmode="decimal">
+            </div>
+            <div class="fab-field">
+              <label for="fab-spacing" data-lang-id="Min spacing / clearance (mm)" data-lang-en="Min spacing / clearance (mm)">Min spacing / clearance (mm)</label>
+              <input type="number" id="fab-spacing" class="fab-input" data-fab-key="spacing" min="0" step="0.01" value="0" inputmode="decimal">
+            </div>
+            <div class="fab-field">
+              <label for="fab-via" data-lang-id="Min via hole / drill (mm)" data-lang-en="Min via hole / drill (mm)">Min via hole / drill (mm)</label>
+              <input type="number" id="fab-via" class="fab-input" data-fab-key="viaHole" min="0" step="0.01" value="0" inputmode="decimal">
+            </div>
+            <div class="fab-field">
+              <label for="fab-hole" data-lang-id="Min drilled hole (mm)" data-lang-en="Min drilled hole (mm)">Min drilled hole (mm)</label>
+              <input type="number" id="fab-hole" class="fab-input" data-fab-key="hole" min="0" step="0.01" value="0" inputmode="decimal">
+            </div>
+            <div class="fab-field">
+              <label for="fab-thickness" data-lang-id="Ketebalan board (mm)" data-lang-en="Board thickness (mm)">Ketebalan board (mm)</label>
+              <input type="number" id="fab-thickness" class="fab-input" data-fab-key="thickness" min="0" step="0.01" value="0" inputmode="decimal">
+            </div>
+          </div>
+
+          <p class="fab-framing-note" data-lang-id="Kami merancang PCB agar sesuai batasan manufaktur yang kamu pilih, supaya file langsung bisa difabrikasi tanpa masalah. RangkaiPCB tidak mencetak PCB; kamu bebas cetak di pabrik mana pun." data-lang-en="We design the PCB to fit the fabrication constraints you choose, so the files can be fabricated directly without issues. RangkaiPCB doesn't print PCBs; you're free to fabricate at any fab house.">Kami merancang PCB agar sesuai batasan manufaktur yang kamu pilih, supaya file langsung bisa difabrikasi tanpa masalah. RangkaiPCB tidak mencetak PCB; kamu bebas cetak di pabrik mana pun.</p>
+        </div>
+
+        <!-- Step 5: Komponen Khusus (opsional) -->
+        <div class="selector-step" data-step="parts" data-locked="true">
+          <div class="selector-step-head">
+            <span class="selector-step-num">5</span>
             <h3 data-lang-id="Komponen Khusus (opsional)" data-lang-en="Specific Components (optional)">Komponen Khusus (opsional)</h3>
           </div>
           <p class="selector-step-sub" data-lang-id="Ada part tertentu yang mau dipakai? Tambahkan di sini, boleh dikosongkan kalau belum tahu." data-lang-en="Have a specific part in mind? Add it here, feel free to leave this blank if you're not sure yet.">Ada part tertentu yang mau dipakai? Tambahkan di sini, boleh dikosongkan kalau belum tahu.</p>
@@ -239,7 +312,6 @@
               <select class="parts-category" aria-label="Kategori komponen / Component category">
                 <option value="Gate Driver" data-lang-id="Gate Driver" data-lang-en="Gate Driver">Gate Driver</option>
                 <option value="MOSFET / Transistor" data-lang-id="MOSFET / Transistor" data-lang-en="MOSFET / Transistor">MOSFET / Transistor</option>
-                <option value="Mikrokontroler" data-lang-id="Mikrokontroler" data-lang-en="Microcontroller">Mikrokontroler</option>
                 <option value="Sensor" data-lang-id="Sensor" data-lang-en="Sensor">Sensor</option>
                 <option value="Regulator / Power IC" data-lang-id="Regulator / Power IC" data-lang-en="Regulator / Power IC">Regulator / Power IC</option>
                 <option value="Op-Amp / Analog" data-lang-id="Op-Amp / Analog" data-lang-en="Op-Amp / Analog">Op-Amp / Analog</option>
@@ -253,6 +325,20 @@
             </div>
           </div>
           <button type="button" class="parts-add" id="parts-add-btn" data-lang-id="+ Tambah komponen" data-lang-en="+ Add component">+ Tambah komponen</button>
+
+          <!-- Referensi desain existing (opsional) -->
+          <div class="ref-design">
+            <label class="ref-design-check">
+              <input type="checkbox" id="ref-design-toggle">
+              <span data-lang-id="Saya sudah punya desain/referensi yang bisa dikirim" data-lang-en="I already have a design/reference I can share">Saya sudah punya desain/referensi yang bisa dikirim</span>
+            </label>
+            <div class="ref-design-detail" id="ref-design-detail" hidden>
+              <p class="ref-design-note" data-lang-id="Kami menerima folder proyek KiCad (dalam bentuk ZIP), PDF skematik/layout, serta gambar (JPEG/PNG). File tidak diunggah lewat halaman ini. Setelah kamu kirim spesifikasi dan kami balas via email, tinggal balas email itu dengan file-nya sebagai lampiran." data-lang-en="We accept KiCad project folders (as a ZIP), schematic/layout PDFs, and images (JPEG/PNG). Files are not uploaded through this page. After you send your spec and we reply by email, just reply to that email with your files attached.">Kami menerima folder proyek KiCad (dalam bentuk ZIP), PDF skematik/layout, serta gambar (JPEG/PNG). File tidak diunggah lewat halaman ini. Setelah kamu kirim spesifikasi dan kami balas via email, tinggal balas email itu dengan file-nya sebagai lampiran.</p>
+              <label class="ref-design-link-label" for="ref-design-link" data-lang-id="Atau tempel tautan file (opsional, mis. Google Drive)" data-lang-en="Or paste a file link (optional, e.g. Google Drive)">Atau tempel tautan file (opsional, mis. Google Drive)</label>
+              <input type="url" id="ref-design-link" class="ref-design-link" data-lang-placeholder-id="https://drive.google.com/..." data-lang-placeholder-en="https://drive.google.com/..." placeholder="https://drive.google.com/...">
+            </div>
+          </div>
+
           <button type="button" class="btn btn-primary parts-done" id="parts-done-btn" data-lang-id="Selesai, lihat spesifikasi" data-lang-en="Done, view specification">Selesai, lihat spesifikasi</button>
         </div>
 

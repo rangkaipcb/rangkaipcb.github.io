@@ -175,13 +175,29 @@
   var PARTS_CATEGORY_LABELS = {
     "Gate Driver": { id: "Gate Driver", en: "Gate Driver" },
     "MOSFET / Transistor": { id: "MOSFET / Transistor", en: "MOSFET / Transistor" },
-    "Mikrokontroler": { id: "Mikrokontroler", en: "Microcontroller" },
     "Sensor": { id: "Sensor", en: "Sensor" },
     "Regulator / Power IC": { id: "Regulator / Power IC", en: "Regulator / Power IC" },
     "Op-Amp / Analog": { id: "Op-Amp / Analog", en: "Op-Amp / Analog" },
     "Konektor": { id: "Konektor", en: "Connector" },
     "Lainnya": { id: "Lainnya", en: "Other" }
   };
+
+  /* Fabrication constraint target labels (step "fab"). */
+  var FAB_LABELS = {
+    jlcpcb: { id: "JLCPCB (standar)", en: "JLCPCB (standard)" },
+    pcbway: { id: "PCBWay (standar)", en: "PCBWay (standard)" },
+    custom: { id: "Isi sendiri (custom)", en: "Custom" }
+  };
+
+  var FAB_FIELD_LABELS = {
+    trace: { id: "trace", en: "trace" },
+    spacing: { id: "spacing", en: "spacing" },
+    viaHole: { id: "via", en: "via" },
+    hole: { id: "hole", en: "hole" },
+    thickness: { id: "thickness", en: "thickness" }
+  };
+
+  var FAB_STANDARD_TEXT = { id: "standar pabrikan", en: "manufacturer standard" };
 
   /* Typical CORE components only (big/important parts), no small
      parts (R/C/LED/etc.) and no prices, per project brief. */
@@ -208,7 +224,12 @@
     }
   };
 
-  var specState = { project: null, mcu: null, layer: null };
+  var specState = {
+    project: null,
+    mcu: null,
+    layer: null,
+    fab: { target: null, trace: null, spacing: null, viaHole: null, hole: null, thickness: null }
+  };
 
   function currentLang() {
     return root.getAttribute("data-lang") === "en" ? "en" : "id";
@@ -241,8 +262,89 @@
       setStepLocked("layer", false);
     }
     if (group === "layer") {
+      setStepLocked("fab", false);
+      renderSpecResult();
+    }
+    if (group === "fab") {
+      specState.fab.target = btn.getAttribute("data-value");
+      renderFabTarget();
+      if (specState.fab.target === "custom") {
+        collectFabCustomValues();
+      }
       setStepLocked("parts", false);
       renderSpecResult();
+    }
+  }
+
+  /* ---------- Batasan Fabrikasi (fab constraint step) ---------- */
+  function renderFabTarget() {
+    var infoJlc = document.getElementById("fab-info-jlcpcb");
+    var infoPcbway = document.getElementById("fab-info-pcbway");
+    var customFields = document.getElementById("fab-custom-fields");
+    if (!infoJlc || !infoPcbway || !customFields) return;
+
+    var target = specState.fab.target;
+    infoJlc.hidden = target !== "jlcpcb";
+    infoPcbway.hidden = target !== "pcbway";
+    customFields.hidden = target !== "custom";
+  }
+
+  function collectFabCustomValues() {
+    var inputs = document.querySelectorAll("#fab-custom-fields .fab-input");
+    inputs.forEach(function (input) {
+      var key = input.getAttribute("data-fab-key");
+      if (!key) return;
+      var num = parseFloat(input.value);
+      specState.fab[key] = isNaN(num) ? 0 : num;
+    });
+  }
+
+  function formatFabValue(num, lang) {
+    if (!num || num <= 0) return FAB_STANDARD_TEXT[lang];
+    var str = String(num);
+    if (lang === "id") str = str.replace(".", ",");
+    return str + " mm";
+  }
+
+  function fabSummaryText(lang) {
+    var target = specState.fab.target;
+    if (!target) return lang === "en" ? "Not specified" : "Belum dipilih";
+    if (target === "jlcpcb" || target === "pcbway") {
+      return FAB_LABELS[target][lang];
+    }
+    // custom
+    var parts = ["trace", "spacing", "viaHole", "hole", "thickness"].map(function (key) {
+      var fieldLabel = FAB_FIELD_LABELS[key][lang];
+      var value = formatFabValue(specState.fab[key], lang);
+      return fieldLabel + " " + value;
+    });
+    var prefix = lang === "en" ? "Custom: " : "Custom: ";
+    return prefix + parts.join(", ");
+  }
+
+  function initFabConstraint() {
+    var customFields = document.getElementById("fab-custom-fields");
+    if (!customFields) return;
+    customFields.querySelectorAll(".fab-input").forEach(function (input) {
+      input.addEventListener("input", function () {
+        collectFabCustomValues();
+        renderSpecResult();
+      });
+    });
+  }
+
+  function resetFabConstraint() {
+    specState.fab = { target: null, trace: null, spacing: null, viaHole: null, hole: null, thickness: null };
+    var infoJlc = document.getElementById("fab-info-jlcpcb");
+    var infoPcbway = document.getElementById("fab-info-pcbway");
+    var customFields = document.getElementById("fab-custom-fields");
+    if (infoJlc) infoJlc.hidden = true;
+    if (infoPcbway) infoPcbway.hidden = true;
+    if (customFields) {
+      customFields.hidden = true;
+      customFields.querySelectorAll(".fab-input").forEach(function (input) {
+        input.value = "0";
+      });
     }
   }
 
@@ -306,6 +408,36 @@
     return parts.map(function (p) {
       return partsCategoryLabel(p.category, lang) + " = " + p.value;
     });
+  }
+
+  /* ---------- Referensi desain existing (opsional) ---------- */
+  function refDesignSummary(lang) {
+    var toggle = document.getElementById("ref-design-toggle");
+    if (!toggle || !toggle.checked) {
+      return lang === "en" ? "None" : "Tidak ada";
+    }
+    var linkEl = document.getElementById("ref-design-link");
+    var link = linkEl ? linkEl.value.trim() : "";
+    if (link) {
+      return (lang === "en" ? "Yes, link: " : "Ada, tautan: ") + link;
+    }
+    return lang === "en"
+      ? "Yes, will send files by email"
+      : "Ada, akan dikirim via email";
+  }
+
+  function initRefDesign() {
+    var toggle = document.getElementById("ref-design-toggle");
+    var detail = document.getElementById("ref-design-detail");
+    if (!toggle || !detail) return;
+    toggle.addEventListener("change", function () {
+      detail.hidden = !toggle.checked;
+      renderSpecResult();
+    });
+    var linkEl = document.getElementById("ref-design-link");
+    if (linkEl) {
+      linkEl.addEventListener("input", function () { renderSpecResult(); });
+    }
   }
 
   function addPartsRow() {
@@ -423,17 +555,24 @@
       ? partsLines.join("; ")
       : (lang === "en" ? "None specified" : "Tidak ada");
 
+    var fabLabel = fabSummaryText(lang);
+    var refLabel = refDesignSummary(lang);
+
     var summaryItemsId = [
       { label: "Jenis Proyek", value: specLabel("project", specState.project) },
       { label: "Mikrokontroler", value: mcuLabel },
       { label: "Jumlah Layer", value: specLabel("layer", specState.layer) },
-      { label: "Komponen Khusus", value: partsLabel }
+      { label: "Batasan Fabrikasi", value: fabLabel },
+      { label: "Komponen Khusus", value: partsLabel },
+      { label: "Referensi Desain", value: refLabel }
     ];
     var summaryItemsEn = [
       { label: "Project Type", value: specLabel("project", specState.project) },
       { label: "Microcontroller", value: mcuLabel },
       { label: "Layer Count", value: specLabel("layer", specState.layer) },
-      { label: "Specific Components", value: partsLabel }
+      { label: "Fabrication Constraints", value: fabLabel },
+      { label: "Specific Components", value: partsLabel },
+      { label: "Design Reference", value: refLabel }
     ];
     var items = lang === "en" ? summaryItemsEn : summaryItemsId;
     summaryEl.innerHTML = items.map(function (it) {
@@ -461,6 +600,8 @@
     var priceText = lang === "en" ? price.en : price.id;
     var mcuLabel = specState.mcu ? specLabel("mcu", specState.mcu) : (lang === "en" ? "not specified" : "belum dipilih");
     var partsLines = partsSummaryLines(lang);
+    var fabText = fabSummaryText(lang);
+    var refText = refDesignSummary(lang);
 
     var lines;
     if (lang === "en") {
@@ -469,7 +610,9 @@
         "Microcontroller: " + mcuLabel,
         "Layers: " + specLabel("layer", specState.layer),
         "Design service price: " + priceText,
-        "Specific components: " + (partsLines.length ? partsLines.join("; ") : "none specified")
+        "Fabrication constraints: " + fabText,
+        "Specific components: " + (partsLines.length ? partsLines.join("; ") : "none specified"),
+        "Existing design reference: " + refText
       ];
     } else {
       lines = [
@@ -477,21 +620,36 @@
         "Mikrokontroler: " + mcuLabel,
         "Jumlah layer: " + specLabel("layer", specState.layer),
         "Harga jasa desain: " + priceText,
-        "Komponen khusus: " + (partsLines.length ? partsLines.join("; ") : "tidak ada")
+        "Batasan fabrikasi: " + fabText,
+        "Komponen khusus: " + (partsLines.length ? partsLines.join("; ") : "tidak ada"),
+        "Referensi desain existing: " + refText
       ];
     }
     textarea.value = lines.join("\n");
   }
 
   function resetSelector() {
-    specState = { project: null, mcu: null, layer: null };
+    specState = {
+      project: null,
+      mcu: null,
+      layer: null,
+      fab: { target: null, trace: null, spacing: null, viaHole: null, hole: null, thickness: null }
+    };
     document.querySelectorAll(".selector-option").forEach(function (b) {
       b.setAttribute("aria-pressed", "false");
     });
     setStepLocked("mcu", true);
     setStepLocked("layer", true);
+    setStepLocked("fab", true);
     setStepLocked("parts", true);
+    resetFabConstraint();
     resetPartsRows();
+    var refToggle = document.getElementById("ref-design-toggle");
+    if (refToggle) refToggle.checked = false;
+    var refDetail = document.getElementById("ref-design-detail");
+    if (refDetail) refDetail.hidden = true;
+    var refLink = document.getElementById("ref-design-link");
+    if (refLink) refLink.value = "";
     var panel = document.getElementById("spec-result");
     if (panel) panel.classList.remove("visible");
     var textarea = document.getElementById("cf-spec");
@@ -514,6 +672,8 @@
     });
 
     initPartsRows();
+    initFabConstraint();
+    initRefDesign();
 
     var resetBtn = document.getElementById("selector-reset-btn");
     if (resetBtn) {
