@@ -578,7 +578,7 @@
       { label: "Jumlah Layer", value: specLabel("layer", specState.layer) },
       { label: "Batasan Fabrikasi", value: fabLabel },
       { label: "Komponen Khusus", value: partsLabel },
-      { label: "Referensi Desain", value: refLabel }
+      { label: "Referensi Desain", value: refLabel, wide: true }
     ];
     var summaryItemsEn = [
       { label: "Project Type", value: specLabel("project", specState.project) },
@@ -586,11 +586,12 @@
       { label: "Layer Count", value: specLabel("layer", specState.layer) },
       { label: "Fabrication Constraints", value: fabLabel },
       { label: "Specific Components", value: partsLabel },
-      { label: "Design Reference", value: refLabel }
+      { label: "Design Reference", value: refLabel, wide: true }
     ];
     var items = lang === "en" ? summaryItemsEn : summaryItemsId;
     summaryEl.innerHTML = items.map(function (it) {
-      return '<div class="spec-summary-item"><span class="label">' + it.label + '</span><span class="value">' + it.value + "</span></div>";
+      var cls = it.wide ? "spec-summary-item spec-summary-item--wide" : "spec-summary-item";
+      return '<div class="' + cls + '"><span class="label">' + it.label + '</span><span class="value">' + it.value + "</span></div>";
     }).join("");
 
     var price = priceForLayer(specState.layer);
