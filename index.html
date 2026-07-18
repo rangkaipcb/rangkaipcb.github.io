@@ -17,6 +17,114 @@
 <meta property="og:locale" content="id_ID">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="assets/css/style.css">
+<!--
+  Structured data (schema.org JSON-LD) untuk SEO. Konten di bawah HARUS sama
+  dengan yang tampil di halaman (syarat Google, jangan mengarang). Teks FAQ
+  memakai bahasa Indonesia (bahasa default halaman). Tidak memakai LocalBusiness
+  karena RangkaiPCB tanpa alamat fisik; pakai Service + Organization.
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://rangkaipcb.github.io/#organization",
+      "name": "RangkaiPCB",
+      "url": "https://rangkaipcb.github.io/",
+      "description": "Jasa desain PCB untuk proyek sekolah dan mahasiswa: skematik, layout, file Gerber siap fabrikasi, dan BOM.",
+      "logo": "https://rangkaipcb.github.io/assets/favicon.svg"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://rangkaipcb.github.io/#website",
+      "url": "https://rangkaipcb.github.io/",
+      "name": "RangkaiPCB",
+      "inLanguage": "id-ID",
+      "publisher": { "@id": "https://rangkaipcb.github.io/#organization" }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://rangkaipcb.github.io/#service",
+      "serviceType": "Jasa desain PCB",
+      "name": "Jasa Desain PCB RangkaiPCB",
+      "description": "Jasa desain PCB murah untuk proyek sekolah dan mahasiswa. Mencakup skematik, layout PCB, file Gerber siap fabrikasi, dan BOM. Board mikrokontroler, sensor, IoT, power supply, dan driver motor DC/BLDC.",
+      "provider": { "@id": "https://rangkaipcb.github.io/#organization" },
+      "areaServed": { "@type": "Country", "name": "Indonesia" },
+      "audience": { "@type": "Audience", "audienceType": "Pelajar SMA/SMK dan mahasiswa" },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Single Layer",
+          "price": "100000",
+          "priceCurrency": "IDR",
+          "description": "Desain PCB single layer, mulai dari Rp 100.000."
+        },
+        {
+          "@type": "Offer",
+          "name": "Double Layer",
+          "price": "150000",
+          "priceCurrency": "IDR",
+          "description": "Desain PCB double layer, mulai dari Rp 150.000."
+        },
+        {
+          "@type": "Offer",
+          "name": "Multilayer 4+",
+          "price": "200000",
+          "priceCurrency": "IDR",
+          "description": "Desain PCB multilayer 4 lapis atau lebih, mulai dari Rp 200.000."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://rangkaipcb.github.io/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Aman nggak bayar di depan?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Untuk paket Single & Double Layer (Rp 100.000 dan Rp 150.000), memang dibayar penuh di muka karena nominalnya kecil. Untuk paket Multilayer (Rp 200.000), kamu bisa DP 50% dulu dan lunasi saat file sudah selesai & diterima. Kita bahas dulu lewat kontak admin sebelum mulai, jadi kamu tahu persis apa yang dikerjakan sebelum transfer."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Saya nggak ngerti PCB sama sekali, bisa dibantu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bisa banget. Kebanyakan yang chat kami memang belum pernah pesan desain PCB sebelumnya. Cukup ceritakan proyeknya mau buat apa. Kalau sudah ada rangkaian/skematik, kirim saja; kalau belum, kita bahas bareng dulu apa yang kamu butuhkan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "File yang saya terima nanti buat apa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kamu terima file Gerber & drill (untuk dikirim ke pabrik PCB supaya dicetak), file proyek KiCad (skematik + layout, bisa dibuka/diedit lagi kalau perlu), PDF skematik, dan BOM (daftar komponen yang perlu dibeli). File Gerber-nya bisa langsung dipakai di layanan fabrikasi PCB mana pun."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Berapa lama pengerjaannya?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sebagai gambaran: kurang lebih 3 hari untuk board single/double layer jenis IoT, Power Supply, atau Sensor/Data Acquisition, dan kurang lebih 1 minggu untuk jenis proyek lain (termasuk Motor Controller DC/BLDC) serta semua board multilayer. Estimasi dihitung sejak kebutuhan lengkap disepakati dan DP masuk. Kami tetap konfirmasi perkiraan waktunya sebelum mulai, penting terutama kalau ada deadline lomba atau tugas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Bisa buat driver motor DC/BLDC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bisa, board driver motor DC/BLDC termasuk salah satu cakupan yang kami bantu, di samping board mikrokontroler, sensor, IoT, dan power supply. Ceritakan spesifikasi motor & kebutuhanmu lewat form spesifikasi, nanti kita bahas detailnya."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Lewati ke konten utama / Skip to main content</a>
